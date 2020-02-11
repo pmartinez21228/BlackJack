@@ -4,7 +4,8 @@
 }
 body{
   background-color: darkgreen;
-  background-image: url()
+  background-image: url(felt.jpg);
+  background-size: 300px;
 }
 #leftcolumn{
   height: 100vh;
