@@ -1,23 +1,83 @@
 *{
   margin: 0;
   padding: 0;
+  max-height: 100vh;
 }
 body{
   background-color: darkgreen;
-  background-image: url(felt.jpg);
+  background-image: url(images/felt.jpg);
   background-size: 300px;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 #leftcolumn{
   height: 100vh;
-  width: 200px;
+  width: 12vw;
   background-color: saddlebrown;
   float: left;
-  background-image: url(wood.jpg)
+  background-image: url(images/wood.jpg)
 }
 #rightcolumn{
   height: 100vh;
-  width: 200px;
+  width: 12vw;
   background-color: saddlebrown;
-  float: right;
-  background-image: url(wood.jpg)
+  float: left;
+  background-image: url(images/wood.jpg);
+}
+#table{
+  width: 76vw;
+  height: 100vh;
+  float: left;
+}
+#title{
+  color: goldenrod;
+  text-align: center;
+  font-size: 100px;
+}
+#payout{
+  color: goldenrod;
+  text-align: center;
+  font-size: 40px;
+}
+#playing-area{
+  width: 76vw;
+  height: 83.3vh;
+  float: left;
+}
+#dealer{
+  width: 49.8%;
+  height: 100%;
+  float: left;
+  border-right: 2.55px solid goldenrod;
+}
+#player{
+  width: 49.8%;
+  height: 100%;
+  float: left;
+  border-left: 2.55px solid goldenrod;
+}
+.player-text{
+  color: goldenrod;
+  font-size: 60px;
+  text-align: center;
+  padding-top: 20px;
+  border-bottom: solid goldenrod 5px;
+}
+.column-text{
+  color: goldenrod;
+  text-align: center;
+  font-size: 60px;
+  border-bottom: solid goldenrod 3px;
+}
+#balance{
+  color: goldenrod;
+  font-size: 60px;
+  text-align: center;
+  border-bottom: solid goldenrod 3px;
+}
+.chips{
+  height: 150px;
+  width: 150px;
+  margin-left: 25%;
 }
