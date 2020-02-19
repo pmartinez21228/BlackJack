@@ -80,7 +80,7 @@ body{
 .chips{
   height: 150px;
   width: 150px;
-  margin-top: 60px;
+  margin-top: 40px;
   margin-left: 40px;
   cursor: pointer;
 }
@@ -130,4 +130,10 @@ body{
 }
 #start{
   margin-top: 500px;
+}
+#bet{
+  color: goldenrod;
+  text-align: center;
+  font-size: 60px;
+  border-bottom: solid goldenrod 3px;
 }

@@ -61,6 +61,109 @@ let credit = 1000;
 let start = document.getElementById("start");
 let reset = document.getElementById("reset");
 let help = document.getElementById("help");
-start.onclick = function(){
-    alert(1)
+let bet = document.getElementById("bet");
+let activeBet = 0;
+let chip10 = document.getElementById("10");
+let chip20 = document.getElementById("20");
+let chip50 = document.getElementById("50");
+let chip100 = document.getElementById("100");
+let card = "url('cards/red_back.png')"
+let playerCount = 0;
+let dealerCount = 0;
+let rand = null;
+let isPlaying = false;
+
+function restart(){
+    deck.forEach(function(x){
+        x.isPlayed = false;
+    })
+    dealer1.style.backgroundImage = null;
+    dealer2.style.backgroundImage = null;
+    player1.style.backgroundImage = null;
+    player2.style.backgroundImage = null;
+    playerCount = 0;
+    dealerCount = 0;
+    credit = 1000;
+    balance.innerHTML = credit;
+}
+function randNum() {
+    rand = Math.floor(Math.random() * 52)
+}
+function displayBack() {
+    setTimeout(function () {
+        dealer1.style.backgroundImage = card
+    }, 500)
+    setTimeout(function () {
+        dealer2.style.backgroundImage = card
+    }, 1000)
+    setTimeout(function () {
+        player1.style.backgroundImage = card
+    }, 1500)
+    setTimeout(function () {
+        player2.style.backgroundImage = card
+    }, 2000)
+}
+function displayFront() {
+    setTimeout(function () {
+        randNum()
+        if (!deck[rand].isPlayed) {
+            dealer1.style.backgroundImage = deck[rand].image
+            dealerCount = dealerCount + deck[rand].value
+            deck[rand].isPlayed = true;
+        } else {
+            while (deck[rand].isPlayed) {
+                randNum()
+            }
+            dealer1.style.backgroundImage = deck[rand].image
+            dealerCount = dealerCount + deck[rand].value
+            deck[rand].isPlayed = true;
+        }
+
+    }, 2500)
+    setTimeout(function () {
+        randNum()
+        if (!deck[rand].isPlayed) {
+            player1.style.backgroundImage = deck[rand].image
+            playerCount = playerCount + deck[rand].value
+            deck[rand].isPlayed = true;
+        } else {
+            while (deck[rand].isPlayed) {
+                randNum()
+            }
+            player1.style.backgroundImage = deck[rand].image
+            playerCount = playerCount + deck[rand].value
+            deck[rand].isPlayed = true;
+        }
+
+    }, 3000)
+    setTimeout(function () {
+        randNum()
+        if (!deck[rand].isPlayed) {
+            player2.style.backgroundImage = deck[rand].image
+            playerCount = playerCount + deck[rand].value
+            deck[rand].isPlayed = true;
+        } else {
+            while (deck[rand].isPlayed) {
+                randNum()
+            }
+            player2.style.backgroundImage = deck[rand].image
+            playerCount = playerCount + deck[rand].value
+            deck[rand].isPlayed = true;
+        }
+
+    }, 3500)
+}
+function startGame() {
+    displayBack()
+    setTimeout(displayFront(), 2500)
+}
+start.onclick = function () {
+    if (!isPlaying) {
+        startGame()
+        isPlaying = true;
+    }
+}
+
+reset.onclick = function(){
+    restart()
 }
