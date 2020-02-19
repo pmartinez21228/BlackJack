@@ -106,6 +106,7 @@ body{
   background-image: url(cards/red_back.png);
   background-size: cover;
   background-position: center;
+  cursor: pointer;
 }
 .hit{
   color: goldenrod;
