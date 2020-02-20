@@ -47,15 +47,19 @@ let deck = [
     { image: "url('cards/KD.png')", value: 10 },
     { image: "url('cards/KH.png')", value: 10 },
     { image: "url('cards/KS.png')", value: 10 },
-    { image: "url('cards/AC.png')", value: 11 },
-    { image: "url('cards/AD.png')", value: 11 },
-    { image: "url('cards/AH.png')", value: 11 },
-    { image: "url('cards/AS.png')", value: 11 },
+    { image: "url('cards/AC.png')", value: 11, type: "ace"},
+    { image: "url('cards/AD.png')", value: 11, type: "ace" },
+    { image: "url('cards/AH.png')", value: 11, type: "ace" },
+    { image: "url('cards/AS.png')", value: 11, type: "ace" },
 ]
 let dealer1 = document.getElementById("card1");
 let dealer2 = document.getElementById("card2");
 let player1 = document.getElementById("card3");
 let player2 = document.getElementById("card4");
+let dealer3 = document.getElementById("card5");
+let dealer4 = document.getElementById("card6");
+let player3 = document.getElementById("card7");
+let player4 = document.getElementById("card8");
 let balance = document.getElementById("balance");
 let credit = 1000;
 let start = document.getElementById("start");
@@ -76,12 +80,22 @@ let dealerCount = 0;
 let rand = null;
 let isPlaying = false;
 let betReady = false;
+let playerHit = false;
+let hitLimit = false;
+let playerAce = false;
+let dealerAce = false;
 
-function restart(){
+function restart() {
     dealer1.style.backgroundImage = null;
     dealer2.style.backgroundImage = null;
     player1.style.backgroundImage = null;
     player2.style.backgroundImage = null;
+    dealer3.style.backgroundImage = null;
+    dealer4.style.backgroundImage = null;
+    player3.style.backgroundImage = null;
+    player4.style.backgroundImage = null;
+    hitLimit = false;
+    playerHit = false;
     playerCount = 0;
     dealerCount = 0;
     credit = 1000;
@@ -95,8 +109,14 @@ function randNum() {
     rand = Math.floor(Math.random() * 52)
 }
 function displayBack() {
+    activeBet = 0
+    bet.innerHTML = activeBet
     playerCount = 0
     dealerCount = 0
+    dealer3.style.backgroundImage = null;
+    dealer4.style.backgroundImage = null;
+    player3.style.backgroundImage = null;
+    player4.style.backgroundImage = null;
     setTimeout(function () {
         dealer1.style.backgroundImage = card
     }, 500)
@@ -114,26 +134,36 @@ function displayBack() {
 function displayFront() {
     setTimeout(function () {
         randNum()
-            dealer1.style.backgroundImage = deck[rand].image
-            dealerCount = dealerCount + deck[rand].value
+        dealer1.style.backgroundImage = deck[rand].image
+        dealerCount = dealerCount + deck[rand].value
+        if(deck[rand].value == 11){
+            dealerAce = true;
+        }
     }, 2500)
     setTimeout(function () {
         randNum()
-            player1.style.backgroundImage = deck[rand].image
-            playerCount = playerCount + deck[rand].value
+        player1.style.backgroundImage = deck[rand].image
+        playerCount = playerCount + deck[rand].value
+        if(deck[rand].value == 11){
+            playerAce = true;
+        }
     }, 3000)
     setTimeout(function () {
         randNum()
-            player2.style.backgroundImage = deck[rand].image
-            playerCount = playerCount + deck[rand].value
+        player2.style.backgroundImage = deck[rand].image
+        playerCount = playerCount + deck[rand].value
+        if(deck[rand].value == 11){
+            playerAce = true;
+        }
     }, 3500)
 }
+
 function startGame() {
     displayBack()
     //setTimeout(displayFront(),2500)
     isPlaying = true;
 }
-function setBet(x){
+function setBet(x) {
     activeBet = Number(activeBet) + x;
     bet.innerHTML = activeBet
     credit = Number(credit) - x;
@@ -144,34 +174,96 @@ start.onclick = function () {
         startGame()
     }
 }
+function playerWin() {
+    credit = credit + (2 * activeBet);
+    balance.innerHTML = credit
+    displayBack()
+}
+function dealerWin() {
+    displayBack()
+}
+function playerStatus(){
+    if(playerCount > 21){
+        if(playerAce){
+            playerCount = playerCount - 10
+        }else{
+            dealerWin()
+            alert("LOSER")
+        }
+    }
+}
+function playerCards(){
+ if(!playerHit && !hitLimit){
+    randNum()
+    player3.style.backgroundImage = deck[rand].image
+    playerCount = playerCount + deck[rand].value
+    if(deck[rand].value == 11){
+        playerAce = true;
+    }
+    playerHit = true
+ }else if(playerHit && !hitLimit){
+    randNum()
+    player4.style.backgroundImage = deck[rand].image
+    playerCount = playerCount + deck[rand].value
+    if(deck[rand].value == 11){
+        playerAce = true;
+    }
+    playerHit = false;
+    hitLimit = true;
+ }
+}
+function dealerCards() {
+    randNum()
+    dealer2.style.backgroundImage = deck[rand].image
+    dealerCount = dealerCount + deck[rand].value
+}
+function hitDealer(){
 
-reset.onclick = function(){
+}
+function playerStand(){
+    dealerCards()
+    if(dealerCount > 21){
+
+    }
+}
+
+reset.onclick = function () {
     restart()
 }
-chip10.onclick = function(){
-    if(betReady && credit - 10 >= 0){
+chip10.onclick = function () {
+    if (betReady && credit - 10 >= 0) {
         setBet(10);
     }
 }
-chip20.onclick = function(){
-    if(betReady && credit - 20 >= 0){
+chip20.onclick = function () {
+    if (betReady && credit - 20 >= 0) {
         setBet(20);
     }
 }
-chip50.onclick = function(){
-    if(betReady && credit - 50 >= 0){
+chip50.onclick = function () {
+    if (betReady && credit - 50 >= 0) {
         setBet(50);
     }
 }
-chip100.onclick = function(){
-    if(betReady && credit - 100 >= 0){
+chip100.onclick = function () {
+    if (betReady && credit - 100 >= 0) {
         setBet(100);
     }
 }
-leftDeck.onclick = function(){
-    if(isPlaying && betReady){
+leftDeck.onclick = function () {
+    if (isPlaying && betReady) {
         displayFront()
         betReady = false;
     }
 
+}
+hit.onclick = function(){
+    if(isPlaying && !betReady){
+    playerCards()
+    playerStatus()
+    }
+}
+stand.onclick = function(){
+    if(isPlaying && !betReady)
+    playerStand()
 }

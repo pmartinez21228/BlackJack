@@ -138,3 +138,23 @@ body{
   font-size: 60px;
   border-bottom: solid goldenrod 3px;
 }
+#card5{
+  margin-top: -480px;
+  margin-left: 110px;
+  border: none;
+}
+#card6{
+  margin-top: -480px;
+  margin-left: 450px;
+  border: none;
+}
+#card7{
+  margin-top: -480px;
+  margin-left: 110px;
+  border: none;
+}
+#card8{
+  margin-top: -480px;
+  margin-left: 450px;
+  border: none;
+}
