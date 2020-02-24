@@ -47,7 +47,7 @@ let deck = [
     { image: "url('cards/KD.png')", value: 10 },
     { image: "url('cards/KH.png')", value: 10 },
     { image: "url('cards/KS.png')", value: 10 },
-    { image: "url('cards/AC.png')", value: 11, type: "ace"},
+    { image: "url('cards/AC.png')", value: 11, type: "ace" },
     { image: "url('cards/AD.png')", value: 11, type: "ace" },
     { image: "url('cards/AH.png')", value: 11, type: "ace" },
     { image: "url('cards/AS.png')", value: 11, type: "ace" },
@@ -81,6 +81,8 @@ let rand = null;
 let isPlaying = false;
 let betReady = false;
 let playerHit = false;
+let dealerHit = false;
+let dealerHitLimit = false;
 let hitLimit = false;
 let playerAce = false;
 let dealerAce = false;
@@ -113,6 +115,7 @@ function displayBack() {
     bet.innerHTML = activeBet
     playerCount = 0
     dealerCount = 0
+    playerHit = false
     dealer3.style.backgroundImage = null;
     dealer4.style.backgroundImage = null;
     player3.style.backgroundImage = null;
@@ -136,7 +139,7 @@ function displayFront() {
         randNum()
         dealer1.style.backgroundImage = deck[rand].image
         dealerCount = dealerCount + deck[rand].value
-        if(deck[rand].value == 11){
+        if (deck[rand].value == 11) {
             dealerAce = true;
         }
     }, 2500)
@@ -144,7 +147,7 @@ function displayFront() {
         randNum()
         player1.style.backgroundImage = deck[rand].image
         playerCount = playerCount + deck[rand].value
-        if(deck[rand].value == 11){
+        if (deck[rand].value == 11) {
             playerAce = true;
         }
     }, 3000)
@@ -152,7 +155,7 @@ function displayFront() {
         randNum()
         player2.style.backgroundImage = deck[rand].image
         playerCount = playerCount + deck[rand].value
-        if(deck[rand].value == 11){
+        if (deck[rand].value == 11) {
             playerAce = true;
         }
     }, 3500)
@@ -160,7 +163,6 @@ function displayFront() {
 
 function startGame() {
     displayBack()
-    //setTimeout(displayFront(),2500)
     isPlaying = true;
 }
 function setBet(x) {
@@ -179,51 +181,82 @@ function playerWin() {
     balance.innerHTML = credit
     displayBack()
 }
+function blackJack(){
+    credit = credit + (((3 * activeBet)/ 2) + activeBet)
+    balance.innerHTML = credit
+    displayBack()
+}
 function dealerWin() {
     displayBack()
 }
-function playerStatus(){
-    if(playerCount > 21){
-        if(playerAce){
+function playerStatus() {
+    if (playerCount > 21) {
+        if (playerAce) {
             playerCount = playerCount - 10
-        }else{
+            playerAce = false
+        } else {
             dealerWin()
-            alert("LOSER")
         }
+    }else if(playerCount == 21){
+        blackJack()
+    } else if (dealerCount > 21) {
+        playerWin()
+    } else if (playerCount > dealerCount) {
+        playerWin()
+    } else if (dealerCount > playerCount) {
+        dealerWin()
+    } else if (dealerCount == playerCount) {
+        draw()
     }
 }
-function playerCards(){
- if(!playerHit && !hitLimit){
-    randNum()
-    player3.style.backgroundImage = deck[rand].image
-    playerCount = playerCount + deck[rand].value
-    if(deck[rand].value == 11){
-        playerAce = true;
+function playerCards() {
+    if (!playerHit && !hitLimit) {
+        randNum()
+        player3.style.backgroundImage = deck[rand].image
+        playerCount = playerCount + deck[rand].value
+        if (deck[rand].value == 11) {
+            playerAce = true;
+        }
+        playerHit = true
+    } else if (playerHit && !hitLimit) {
+        randNum()
+        player4.style.backgroundImage = deck[rand].image
+        playerCount = playerCount + deck[rand].value
+        if (deck[rand].value == 11) {
+            playerAce = true;
+        }
+        playerHit = false;
+        hitLimit = true;
     }
-    playerHit = true
- }else if(playerHit && !hitLimit){
-    randNum()
-    player4.style.backgroundImage = deck[rand].image
-    playerCount = playerCount + deck[rand].value
-    if(deck[rand].value == 11){
-        playerAce = true;
-    }
-    playerHit = false;
-    hitLimit = true;
- }
 }
 function dealerCards() {
     randNum()
     dealer2.style.backgroundImage = deck[rand].image
     dealerCount = dealerCount + deck[rand].value
 }
-function hitDealer(){
-
+function hitDealer() {
+    if (!dealerHit && !dealerHitLimit) {
+        randNum()
+        dealer3.style.backgroundImage = deck[rand].image
+        dealerCount = dealerCount + deck[rand].value
+        dealerHit = true;
+    }else if (dealerHit && !dealerHitLimit){
+        dealer4.style.backgroundImage = deck[rand].image
+        dealerCount = dealerCount + deck[rand].value
+        dealerHit = false;
+        dealerHitLimit = true;
+    }
 }
-function playerStand(){
+function playerStand() {
     dealerCards()
-    if(dealerCount > 21){
-
+    if (dealerCount > 21) {
+        playerWin()
+    } else if (dealerCount < 17) {
+        hitDealer()
+        playerStatus()
+    }else if (dealerCount < 17){
+        hitDealer()
+        playerStatus()
     }
 }
 
@@ -257,13 +290,13 @@ leftDeck.onclick = function () {
     }
 
 }
-hit.onclick = function(){
-    if(isPlaying && !betReady){
-    playerCards()
-    playerStatus()
+hit.onclick = function () {
+    if (isPlaying && !betReady) {
+        playerCards()
+        playerStatus()
     }
 }
-stand.onclick = function(){
-    if(isPlaying && !betReady)
-    playerStand()
+stand.onclick = function () {
+    if (isPlaying && !betReady)
+        playerStand()
 }
