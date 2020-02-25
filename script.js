@@ -131,6 +131,8 @@ function setBoard() {
     dealerAce = false;
     activeBet = 0;
     betReady = true;
+    revealedCard = false;
+    winDecided = false;
     dealer3.style.backgroundImage = null;
     dealer4.style.backgroundImage = null;
     player3.style.backgroundImage = null;
@@ -305,7 +307,7 @@ function status(){
     }else if(playerCount > dealerCount){
         playerWin()
     }else if (playerCount < dealerCount){
-        dealerLoss()
+        playerLoss()
     }
 }
 
@@ -348,12 +350,12 @@ deckOfCards.onclick = function () {
 
 }
 hit.onclick = function () {
-    if (isPlaying && !betReady) {
+    if (isPlaying && !betReady && !winDecided) {
         hitPlayer()
     }
 }
 stand.onclick = function () {
-    if (isPlaying && !betReady && !revealedCard){
+    if (isPlaying && !betReady && !revealedCard && !winDecided){
         revealDealer()
         revealedCard = true
         if(dealerCount < 17){
