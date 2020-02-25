@@ -87,6 +87,7 @@ let dealerHitLimit = false;
 let playerAce = false;
 let dealerAce = false;
 let revealedCard = false;
+let winDecided = false; 
 
 function resetGame(){
     isPlaying = false;
@@ -105,6 +106,7 @@ function resetGame(){
     credit = 1000;
     balance.innerHTML = credit
     revealedCard = false
+    winDecided = false;
     dealer1.style.backgroundImage = null;
     dealer2.style.backgroundImage = null;
     dealer3.style.backgroundImage = null;
@@ -129,6 +131,10 @@ function setBoard() {
     dealerAce = false;
     activeBet = 0;
     betReady = true;
+    dealer3.style.backgroundImage = null;
+    dealer4.style.backgroundImage = null;
+    player3.style.backgroundImage = null;
+    player4.style.backgroundImage = null;
     setTimeout(function () {
         dealer1.style.backgroundImage = card
     }, 500)
@@ -181,14 +187,30 @@ function startGame() {
 function playerLoss(){
     activeBet = 0
     bet.innerHTML = activeBet
+    activeBet = 0;
+    bet.innerHTML = activeBet;
+    winDecided = true;
 }
 function playerWin(){
     credit = credit + (2 * activeBet);
     balance.innerHTML = credit;
+    activeBet = 0;
+    bet.innerHTML = activeBet;
+    winDecided = true;
 }
 function blackjack(){
     credit = credit + (Math.floor((3 * activeBet)/2) + activeBet);
     balance.innerHTML = credit;
+    activeBet = 0;
+    bet.innerHTML = activeBet;
+    winDecided = true;
+}
+function draw(){
+    credit = credit + activeBet
+    balance.innerHTML = credit;
+    activeBet = 0;
+    bet.innerHTML = activeBet;
+    winDecided = true;
 }
 function setBet(x) {
     activeBet = Number(activeBet) + x;
@@ -278,7 +300,13 @@ function revealDealer(){
 }
 
 function status(){
-    
+    if(playerCount == dealerCount){
+        draw()
+    }else if(playerCount > dealerCount){
+        playerWin()
+    }else if (playerCount < dealerCount){
+        dealerLoss()
+    }
 }
 
 
@@ -314,6 +342,8 @@ deckOfCards.onclick = function () {
     if (isPlaying && betReady) {
         setCards()
         betReady = false;
+    }else if(winDecided){
+        setBoard()
     }
 
 }
@@ -331,5 +361,6 @@ stand.onclick = function () {
                 hitDealer()
             }
         }
+        status()
     }
 }
